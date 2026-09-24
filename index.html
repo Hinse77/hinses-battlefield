@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071122" />
+    <link rel="icon" type="image/svg+xml" href="/hinses-battlefield-logo.svg" />
+    <title>Hinses Battlefield</title>
+  </head>
+  <body>
+    <main class="game-shell">
+      <canvas id="game" aria-label="Hinses Battlefield game area"></canvas>
+      <section class="start-screen" id="start-screen">
+        <div class="start-card"><img class="game-logo" src="/hinses-battlefield-logo.svg" alt="Hinses Battlefield logo" /><p class="eyebrow">HINSES BATTLEFIELD</p><h1>Grow. Outsmart. Conquer.</h1><p>Collect particles, avoid larger organisms, and absorb anything that is at least 15% smaller.</p><label>Difficulty<select id="difficulty"><option value="easy">Easy · more prey</option><option value="normal" selected>Normal · balanced</option><option value="hard">Hard · more hunters</option><option value="extreme">Very hard · hunter arena</option></select></label><button id="start-game">Enter arena</button><small>Choose Mouse or Keyboard from Match goal after starting.</small></div>
+      </section>
+      <section class="hud" aria-live="polite">
+        <div class="brand"><img src="/hinses-battlefield-logo.svg" alt="" /> HINSES BATTLEFIELD</div>
+        <div class="stat"><span>Mass</span><strong id="mass">200</strong></div>
+        <div class="stat"><span>Size</span><strong id="size">24</strong></div>
+        <div class="stat"><span>Rank</span><strong id="rank">—</strong></div>
+        <div class="stat"><span>Survival</span><strong id="time">0:00</strong></div>
+        <div class="stat"><span>Absorbed</span><strong id="absorbed">0</strong></div>
+        <div class="stat"><span>Goal</span><strong id="goal">200 / 40,000</strong></div>
+        <button class="power" id="power" aria-label="Activate Overdrive">OVERDRIVE <span id="power-status">READY</span></button>
+        <p class="hint" id="controls-hint">Mouse control active · Triple-click to boost</p>
+      </section>
+      <aside class="leaderboard"><h2>TOP MASS</h2><ol id="leaderboard"></ol></aside>
+      <aside class="legend" aria-label="Opponent color legend"><h2>OPPONENT TYPES & ABILITIES</h2><span><i class="grazer"></i>Grazer · Forage Rush</span><span><i class="coward"></i>Coward · Panic Dash</span><span><i class="hunter"></i>Hunter · Bloodrush</span><span><i class="opportunist"></i>Opportunist · Ambush</span><span><i class="chaotic"></i>Chaotic · Wild Leap</span><span><i class="elite"></i>Elite · Vector Burst</span><span><i class="boss"></i>Titan Vex · Titan Charge</span></aside>
+      <section class="settings" aria-label="Match settings">
+        <div class="quick-actions"><button class="settings-toggle" id="settings-toggle" aria-expanded="false">Match goal</button><button class="best-toggle" id="best-toggle" aria-expanded="false">Best of</button><button class="pause-round" id="pause-round">Pause</button><button class="restart-round" id="restart-round">Restart</button></div>
+        <div class="settings-panel" id="settings-panel" hidden>
+          <h2>PLAYER & MATCH</h2>
+          <label>Player name<input id="player-name" type="text" maxlength="14" value="YOU" /></label>
+          <label>Controls<select id="control-mode"><option value="mouse">Mouse</option><option value="keyboard">Keyboard</option></select></label>
+          <label class="sound-row">Sound<input id="sound-enabled" type="checkbox" checked /></label>
+          <label>Win condition<select id="goal-mode"><option value="mass">Reach mass</option><option value="time">Survive time</option></select></label>
+          <label id="mass-setting">Target mass<input id="target-mass" type="number" min="200" step="100" value="40000" /></label>
+          <label id="time-setting" hidden>Time limit (seconds)<input id="time-limit" type="number" min="30" step="30" value="600" /></label>
+          <button id="apply-settings">Save name & settings · restart</button>
+        </div>
+        <div class="best-panel" id="best-panel" hidden><h2>BEST OF</h2><h3>Your best runs</h3><ol id="best-player"></ol><h3>Arena legends</h3><ol id="best-arena"></ol></div>
+      </section>
+      <section class="game-over" id="game-over" hidden><div class="fireworks" id="fireworks" hidden><i></i><i></i><i></i><i></i><i></i></div><div><p id="end-kicker">RUN OVER</p><h1 id="end-title">Absorbed by the arena</h1><strong id="final-mass">0 mass</strong><button id="restart">Play again</button></div></section>
+      <section class="pause-overlay" id="pause-overlay" hidden><div><p>PAUSED</p><h1>Take a breath.</h1><button id="resume">Resume</button></div></section>
+      <section class="touch-controls" id="touch-controls" aria-label="Touch controls"><div class="joystick" id="joystick"><span id="stick"></span></div></section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
