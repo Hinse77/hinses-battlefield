@@ -1,0 +1,25 @@
+# Hinses Battlefield
+
+Hinses Battlefield is a free, non-commercial single-player browser arena game.
+
+## What players do
+
+Players control a growing orb. They collect particles, absorb organisms that are at least 15% smaller, avoid larger threats, build combos, use Overdrive, and aim to reach 40,000 mass within ten minutes. At time up, the largest organism wins.
+
+## Opponents and difficulty
+
+The arena contains Toxic Crazers, Cowards, Hunters, Opportunists, Chaotics, Elites, and bosses. Toxic Crazers harm the organism that absorbs them. Hard and Very Hard increase pressure over time; Very Hard includes Titan Vex, Ember Nyx, Void Orion, and Toxic Master.
+
+## Friendly arena challenges
+
+Completed rounds offer a short Arena Code. Friends can enter this code on the start screen to create the same starting food, opponent, boss, and difficulty layout. The run is not prerecorded: player movement and real-time abilities determine the result.
+
+## Key facts
+
+- Platform: web browser
+- Price: free
+- Game type: arcade arena strategy game
+- Core features: combos, Overdrive, boss abilities, service ranks, arena codes
+- Modes: Easy, Normal, Hard, Very Hard
+- Creator: Patrick Hinsberger
+- Website: https://hinses-battlefield.vercel.app/

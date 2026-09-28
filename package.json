@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "test": "node scripts/arena-smoke.mjs"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.36.0"
   },
   "devDependencies": {
     "typescript": "~5.9.3",

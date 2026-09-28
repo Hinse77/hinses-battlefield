@@ -1,0 +1,12 @@
+{
+  "name": "Hinses Battlefield",
+  "short_name": "Battlefield",
+  "description": "A free browser arena strategy game: grow, outsmart hunters and bosses, and conquer the arena.",
+  "lang": "en",
+  "categories": ["games", "entertainment", "strategy"],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04101a",
+  "theme_color": "#071122",
+  "icons": [{ "src": "/hinses-battlefield-logo.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

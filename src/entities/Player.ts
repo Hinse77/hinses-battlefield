@@ -10,11 +10,11 @@ export class Player {
   speedMultiplier = 1;
 
   constructor(x: number, y: number) { this.x = x; this.y = y; }
-  get radius() { return CONFIG.player.baseRadius * Math.sqrt(this.mass / CONFIG.player.baseMass); }
+  get radius() { return CONFIG.player.baseRadius * Math.pow(this.mass / CONFIG.player.baseMass, CONFIG.player.radiusExponent); }
   update(dt: number, target: Vector) {
     const dx = target.x - this.x, dy = target.y - this.y, distance = Math.hypot(dx, dy);
-    const desiredSpeed = Math.max(CONFIG.player.minSpeed, CONFIG.player.maxSpeed / Math.pow(this.mass / CONFIG.player.baseMass, 0.27)) * this.speedMultiplier;
-    if (distance > 5) { this.velocity.x += (dx / distance) * CONFIG.player.acceleration * this.speedMultiplier * dt; this.velocity.y += (dy / distance) * CONFIG.player.acceleration * this.speedMultiplier * dt; }
+    const desiredSpeed = Math.max(CONFIG.player.minSpeed, CONFIG.player.maxSpeed / Math.pow(this.mass / CONFIG.player.baseMass, 0.27)) * this.speedMultiplier * CONFIG.gameplay.movementSpeed;
+    if (distance > 5) { this.velocity.x += (dx / distance) * CONFIG.player.acceleration * this.speedMultiplier * CONFIG.gameplay.movementSpeed * dt; this.velocity.y += (dy / distance) * CONFIG.player.acceleration * this.speedMultiplier * CONFIG.gameplay.movementSpeed * dt; }
     const speed = Math.hypot(this.velocity.x, this.velocity.y);
     if (speed > desiredSpeed) { this.velocity.x = this.velocity.x / speed * desiredSpeed; this.velocity.y = this.velocity.y / speed * desiredSpeed; }
     const damping = Math.exp(-CONFIG.player.damping * dt); this.velocity.x *= damping; this.velocity.y *= damping;

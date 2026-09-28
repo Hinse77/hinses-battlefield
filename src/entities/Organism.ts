@@ -9,19 +9,22 @@ export class Organism {
   speedMultiplier = 1;
   boostUntil = 0;
   abilityCooldownUntil = 0;
+  chaosExplosionAt = 0;
   constructor(public id: number, public x: number, public y: number, public mass: number, public color: string, public personality: "grazer" | "coward" | "hunter" | "opportunist" | "chaotic" | "elite", public name: string, public boss = false) { this.target = { x, y }; this.displayRadius = this.radius; }
-  get radius() { return CONFIG.player.baseRadius * Math.sqrt(this.mass / CONFIG.player.baseMass); }
+  get radius() { return CONFIG.player.baseRadius * Math.pow(this.mass / CONFIG.player.baseMass, CONFIG.player.radiusExponent); }
   update(dt: number) {
-    const safeMargin = Math.max(180, this.radius * 3);
+    const safeMargin = Math.max(96, this.radius * 1.55);
     this.target.x = Math.max(safeMargin, Math.min(CONFIG.world.width - safeMargin, this.target.x));
     this.target.y = Math.max(safeMargin, Math.min(CONFIG.world.height - safeMargin, this.target.y));
     const dx = this.target.x - this.x, dy = this.target.y - this.y, distance = Math.hypot(dx, dy);
-    const speedLimit = Math.max(85, 305 / Math.pow(this.mass / CONFIG.player.baseMass, .24)) * this.speedMultiplier;
-    if (distance > 3) { this.velocity.x += dx / distance * 780 * dt; this.velocity.y += dy / distance * 780 * dt; }
-    if (this.x < safeMargin) this.velocity.x += 950 * dt;
-    if (this.x > CONFIG.world.width - safeMargin) this.velocity.x -= 950 * dt;
-    if (this.y < safeMargin) this.velocity.y += 950 * dt;
-    if (this.y > CONFIG.world.height - safeMargin) this.velocity.y -= 950 * dt;
+    const personalitySpeed = this.personality === "opportunist" ? 1.1 : 1;
+    const speedLimit = Math.max(85, 305 / Math.pow(this.mass / CONFIG.player.baseMass, .24)) * this.speedMultiplier * personalitySpeed * CONFIG.gameplay.movementSpeed;
+    if (distance > 3) { this.velocity.x += dx / distance * 780 * personalitySpeed * CONFIG.gameplay.movementSpeed * dt; this.velocity.y += dy / distance * 780 * personalitySpeed * CONFIG.gameplay.movementSpeed * dt; }
+    const wallForce = 1450;
+    if (this.x < safeMargin) { this.velocity.x += wallForce * dt; this.target.x = Math.max(this.target.x, safeMargin * 1.8); }
+    if (this.x > CONFIG.world.width - safeMargin) { this.velocity.x -= wallForce * dt; this.target.x = Math.min(this.target.x, CONFIG.world.width - safeMargin * 1.8); }
+    if (this.y < safeMargin) { this.velocity.y += wallForce * dt; this.target.y = Math.max(this.target.y, safeMargin * 1.8); }
+    if (this.y > CONFIG.world.height - safeMargin) { this.velocity.y -= wallForce * dt; this.target.y = Math.min(this.target.y, CONFIG.world.height - safeMargin * 1.8); }
     const speed = Math.hypot(this.velocity.x, this.velocity.y);
     if (speed > speedLimit) { this.velocity.x = this.velocity.x / speed * speedLimit; this.velocity.y = this.velocity.y / speed * speedLimit; }
     const drag = Math.exp(-5.2 * dt); this.velocity.x *= drag; this.velocity.y *= drag;
