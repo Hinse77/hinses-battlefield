@@ -12,6 +12,7 @@ const sitemap = read("public/sitemap.xml");
 const llms = read("public/llms.txt");
 const manifest = read("public/manifest.webmanifest");
 const celebration = read("src/ui/CelebrationFireworks.ts");
+const redisAdapter = read("api/redis.ts");
 const failures = [];
 const expect = (condition, message) => { if (!condition) failures.push(message); };
 
@@ -83,6 +84,7 @@ expect(/deathCauses/.test(read("api/balance.ts")) && /phaseSnapshots/.test(read(
 expect(/bossAiDefeats/.test(read("api/balance.ts")) && /bossCoreReturns/.test(read("api/balance.ts")) && /schemaVersion:4/.test(read("api/balance.ts")), "Shared Boss Core telemetry is incomplete.");
 expect(/Access-Control-Allow-Origin/.test(read("api/balance.ts")) && /req\.method === "OPTIONS"/.test(read("api/balance.ts")), "Local-to-deployed telemetry CORS support is incomplete.");
 expect(/balance:run-ids:v1/.test(read("api/balance.ts")) && /duplicate:true/.test(read("api/balance.ts")) && /if \(!abandoned\)/.test(read("api/balance.ts")), "Central run deduplication or abandoned-round exclusion is incomplete.");
+expect(/KV_REST_API_URL/.test(redisAdapter) && /KV_REST_API_TOKEN/.test(redisAdapter) && /UPSTASH_REDIS_REST_URL/.test(redisAdapter) && /new Redis\(\{ url, token \}\)/.test(redisAdapter), "Redis adapter does not support both Vercel KV and direct Upstash environment names.");
 expect(/req\.method === "GET"/.test(read("api/balance.ts")) && /recentRounds/.test(read("api/balance.ts")) && /top10/.test(read("api/balance.ts")), "Detailed balance telemetry is not centrally retrievable.");
 expect(/admin-recent/.test(html) && /recentRounds/.test(game) && /pulse-round-metrics/.test(game) && /pulse-types/.test(game), "Recent shared balance rounds are missing from Arena Pulse.");
 expect(/pulse-kpis/.test(html) && /pulse-balance/.test(html) && /pulse-ring/.test(css) && /pulse-round\.win/.test(css), "Arena Pulse graphical dashboard is incomplete.");

@@ -1,6 +1,4 @@
-import { Redis } from "@upstash/redis";
-
-const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN ? Redis.fromEnv() : null;
+import { redis } from "./redis";
 const key = "hinses-battlefield:service-ranks:v1";
 const factors: Record<string, number> = { easy:.7, normal:1, hard:1.25, extreme:1.6 };
 const clean = (value: unknown, max: number) => Math.max(0, Math.min(max, Number(value) || 0));

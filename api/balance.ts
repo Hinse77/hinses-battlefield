@@ -1,6 +1,4 @@
-import { Redis } from "@upstash/redis";
-
-const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN ? Redis.fromEnv() : null;
+import { redis } from "./redis";
 const types = ["grazer", "coward", "hunter", "opportunist", "chaotic", "elite"] as const;
 const phaseTypes = [...types, "player"] as const;
 const allowed = new Set(["easy", "normal", "hard", "extreme"]);

@@ -1,6 +1,4 @@
-import { Redis } from "@upstash/redis";
-
-const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN ? Redis.fromEnv() : null;
+import { redis } from "./redis";
 const difficulties = new Set(["easy", "normal", "hard", "extreme"]);
 const keys = { totals: "hinses-battlefield:analytics:totals", sessions: "hinses-battlefield:analytics:sessions", startedByDifficulty: "hinses-battlefield:analytics:started-by-difficulty", completedByDifficulty: "hinses-battlefield:analytics:completed-by-difficulty", startedByCountry: "hinses-battlefield:analytics:started-by-country" };
 const integer = (value: unknown) => Math.max(0, Number(value) || 0);
