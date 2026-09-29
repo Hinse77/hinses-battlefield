@@ -67,11 +67,16 @@ expect(/bossAiDefeats/.test(game) && /bossCoreReturns/.test(game) && /schemaVers
 expect(/toxic-alert/.test(html) && /TOXIC KAMIKAZE/.test(html), "Toxic Kamikaze warning is missing.");
 expect(/arenaCode\(\)/.test(game) && /setArenaCode/.test(game) && /arenaRandom\(\)/.test(game), "Replay arena code generation is incomplete.");
 expect(/arena-code/.test(html) && /Copy arena code/.test(game), "Replay arena code UI is missing.");
+expect(/id="challenge-friend"/.test(html) && /Challenge a friend/.test(html) && /Share this result and arena/.test(html), "Challenge-a-friend result action is missing.");
+expect(/prepareChallenge\(points\.total\)/.test(game) && /I reached \$\{mass\} mass and earned \$\{score\} points/.test(game) && /Can you beat me in the same arena\?/.test(game) && /Arena Code: \$\{this\.arenaCode\(\)\}/.test(game), "Challenge message does not include the complete round result and arena code.");
+expect(/toLocaleString\("en-US"\)/.test(game) && /https:\/\/hinses-battlefield\.vercel\.app/.test(game), "Challenge numbers or production link are not share-ready.");
+expect(/this\.mobileMode && typeof navigator\.share === "function"/.test(game) && /navigator\.clipboard\.writeText/.test(game) && /document\.execCommand\("copy"\)/.test(game), "Challenge sharing lacks mobile, clipboard, or legacy fallback support.");
+expect(/\.challenge-friend/.test(css) && /challenge-sheen/.test(css) && /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/.test(css), "Challenge button is not integrated into the compact result design.");
 expect(/difficultyField\.addEventListener\("change"/.test(game) && /codeField\.value = ""/.test(game) && /difficultyField\.value = this\.difficulty/.test(game), "A stale arena code can still override a manually selected difficulty.");
 expect(/record\.difficulty === this\.difficulty/.test(game), "Hall of Fame records are not filtered by the active difficulty.");
 expect(/record\.difficulty === this\.latestHallRecord\.difficulty/.test(game), "The current-round NEW marker can leak into another difficulty.");
 expect(/const record = \{ name: this\.playerName, score, mass: Math\.floor\(this\.player\.mass\), wins: victory \? 1 : 0, runs: 1, combo: this\.maxCombo, difficulty: this\.difficulty \}/.test(game), "Completed Hall of Fame records do not preserve their round difficulty.");
-expect(/Arena codes/.test(html) && /same starting food, opponents and bosses/.test(html), "The field guide does not explain arena codes accurately.");
+expect(/Challenge a friend/.test(html) && /same starting food, opponents and bosses/.test(html), "The field guide does not explain friend challenges and arena codes accurately.");
 expect(/At time up, the largest organism wins/.test(html) && /Overdrive lasts 5 seconds, then recharges for 18 seconds/.test(html), "Core field-guide rules are out of date.");
 expect(/Void Rift that empowers hunters and elites/.test(html) && /He is poisonous too/.test(html) && /Boss Core can restore it once after 20 seconds/.test(html), "Boss field-guide details are out of date.");
 expect(/\"@type\":\"VideoGame\"/.test(html) && /application-name/.test(html) && /canonical/.test(html), "Core game SEO metadata is incomplete.");
@@ -115,6 +120,24 @@ for (let run = 0; run < 100; run++) {
   }
 }
 
+const difficulties = ["easy", "normal", "hard", "extreme"];
+const codeTags = { easy:"E", normal:"N", hard:"H", extreme:"V" };
+
+// One hundred share-message combinations: results remain human-readable and
+// every challenge points to the exact arena plus the public game URL.
+for (let run = 0; run < 100; run++) {
+  const mass = 200 + Math.floor(Math.random() * 250000);
+  const points = Math.floor(Math.random() * 500000);
+  const difficulty = difficulties[run % difficulties.length];
+  const code = `HB-${codeTags[difficulty]}-${(100000 + run).toString(36).toUpperCase()}`;
+  const message = `I reached ${mass.toLocaleString("en-US")} mass and earned ${points.toLocaleString("en-US")} points in Hinses Battlefield.\nCan you beat me in the same arena?\nArena Code: ${code}\nhttps://hinses-battlefield.vercel.app`;
+  const lines = message.split("\n");
+  expect(lines.length === 4, `Challenge smoke ${run + 1}: message does not have four readable lines.`);
+  expect(lines[0].includes(mass.toLocaleString("en-US")) && lines[0].includes(points.toLocaleString("en-US")), `Challenge smoke ${run + 1}: result values are missing or unformatted.`);
+  expect(lines[2] === `Arena Code: ${code}`, `Challenge smoke ${run + 1}: arena code changed during formatting.`);
+  expect(lines[3] === "https://hinses-battlefield.vercel.app", `Challenge smoke ${run + 1}: public link is incorrect.`);
+}
+
 // One hundred endgame mobility checks: increasing Elite mass must never make
 // Vector Burst faster, longer, or more frequent; player Overdrive stays faster.
 for (let run = 0; run < 100; run++) {
@@ -132,8 +155,6 @@ for (let run = 0; run < 100; run++) {
 // One hundred start-menu and Hall-of-Fame state combinations: a manual choice wins
 // over a stale replay code, replay codes remain intentionally authoritative once,
 // and NEW can only appear inside the completed round's own difficulty tier.
-const difficulties = ["easy", "normal", "hard", "extreme"];
-const codeTags = { easy:"E", normal:"N", hard:"H", extreme:"V" };
 for (let run = 0; run < 100; run++) {
   const selected = difficulties[Math.floor(Math.random() * difficulties.length)];
   const staleCodeDifficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
@@ -162,4 +183,4 @@ if (failures.length) {
   console.error(`Arena smoke test failed (${failures.length}):\n- ${failures.join("\n- ")}`);
   process.exit(1);
 }
-console.log("Arena smoke test passed: 100 randomized arena layouts, 100 difficulty/Hall-of-Fame state combinations and core-rule invariants verified.");
+console.log("Arena smoke test passed: 100 randomized arena layouts, 100 difficulty/Hall-of-Fame combinations, 100 challenge messages and core-rule invariants verified.");
