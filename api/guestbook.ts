@@ -1,6 +1,9 @@
-import { redis } from "./redis";
+import { Redis } from "@upstash/redis";
 
 type Entry = { name: string; message: string; createdAt: string };
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
 const key = "hinses-battlefield:guestbook:v1";
 const clean = (value: unknown, max: number) => String(value || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, max);
 

@@ -1,7 +1,10 @@
-import { redis } from "./redis";
+import { Redis } from "@upstash/redis";
 
 type Record = { name: string; score: number; mass: number; wins: number; runs: number; combo: number; difficulty: string };
 const allowed = new Set(["easy", "normal", "hard", "extreme"]);
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
 // A new season starts with the Toxic Master release. Older score keys are intentionally retired.
 const keyFor = (difficulty: string) => `hinses-battlefield:hall:season-2:${difficulty}`;
 const clean = (value: unknown, max: number) => Math.max(0, Math.min(max, Number(value) || 0));

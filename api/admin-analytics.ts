@@ -1,4 +1,8 @@
-import { redis } from "./redis";
+import { Redis } from "@upstash/redis";
+
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const redis = redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
 const keys = { totals: "hinses-battlefield:analytics:totals", sessions: "hinses-battlefield:analytics:sessions", startedByDifficulty: "hinses-battlefield:analytics:started-by-difficulty", completedByDifficulty: "hinses-battlefield:analytics:completed-by-difficulty", startedByCountry: "hinses-battlefield:analytics:started-by-country" };
 const number = (value: unknown) => Math.max(0, Number(value) || 0);
 
