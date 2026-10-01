@@ -39,6 +39,13 @@ expect(/maxMass/.test(game) && /averageMass/.test(game) && /strongest individual
 expect(/progress >= \.9 \? 3 : progress >= \.75 \? 2 : progress >= \.5 \? 1 : 0/.test(game) && /FULL ARENA ALARM/.test(game), "The 50/75/90 percent escalation stages are incomplete.");
 expect(/id="minimap"/.test(html) && /drawMinimap/.test(game) && /slice\(0,10\)/.test(game) && /o\.boss && !topIds\.has\(o\.id\)/.test(game), "Arena Radar does not show the top ten opponents and every boss.");
 expect(/\.mobile-play \.arena-radar canvas \{ height:76px/.test(css), "Arena Radar has no compact mobile layout.");
+expect(/edgeEscapeUntil/.test(game) && /edgeEscapeActive/.test(game) && /touchingEdge/.test(game) && /now\+2400/.test(game), "Persistent edge-escape lanes are incomplete.");
+expect(/stuckSeconds/.test(read("src/entities/Organism.ts")) && /leftPressure \* leftPressure/.test(read("src/entities/Organism.ts")) && /this\.velocity\.x \+= dx\/centerDistance\*280/.test(read("src/entities/Organism.ts")), "Physical wall recovery or the stuck detector is incomplete.");
+for (let run = 0; run < 100; run++) {
+  const x = run % 2 ? 120 : 5880, y = run % 4 < 2 ? 120 : 5880, centerX = 3000, centerY = 3000, dx = centerX - x, dy = centerY - y, distance = Math.hypot(dx, dy), lane = (run % 7 - 3) * 105;
+  const targetX = centerX - dy / distance * lane, targetY = centerY + dx / distance * lane;
+  expect(targetX > 500 && targetX < 5500 && targetY > 500 && targetY < 5500 && dx * (targetX - x) + dy * (targetY - y) > 0, `Edge recovery smoke ${run + 1}: unsafe escape lane.`);
+}
 for (let run = 0; run < 100; run++) {
   const progress = run / 100;
   const stage = progress >= .9 ? 3 : progress >= .75 ? 2 : progress >= .5 ? 1 : 0;

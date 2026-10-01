@@ -180,6 +180,9 @@ export class Game {
   private updateAi(dt: number) {
     for (const o of this.organisms) {
       if (performance.now() < this.toxicKamikazeUntil && this.toxicKamikazeIds.has(o.id)) { const target = this.toxicKamikazeTargets.get(o.id); if (target) o.target = { x:target.x, y:target.y }; o.update(dt); continue; }
+      const now=performance.now(), escapeMargin=Math.max(220,o.radius*2.65), touchingEdge=o.x < escapeMargin || o.x > CONFIG.world.width-escapeMargin || o.y < escapeMargin || o.y > CONFIG.world.height-escapeMargin;
+      if (touchingEdge) { o.edgeEscapeUntil=Math.max(o.edgeEscapeUntil,now+2400); o.decisionIn=0; }
+      const edgeEscapeActive=now < o.edgeEscapeUntil;
       o.decisionIn -= dt;
       if (o.decisionIn <= 0) {
         const elite = o.personality === "elite", escalation = this.arenaEscalation();
@@ -217,8 +220,9 @@ export class Game {
         const baseHuntChance = o.boss ? 1 : o.personality === "hunter" ? .9 : veryHardElite ? .995 : elite ? .92 : o.personality === "opportunist" ? .55 : o.personality === "grazer" ? .12 : survivorCoward ? .05 : .25;
         const huntChance = pursuit ? 1 : advancedNonHunter ? Math.min(.8, baseHuntChance + .18) : baseHuntChance;
         const eliteRetreat = lateElite && !!threat && threat.mass >= o.mass * 1.38 && distanceTo(threat) < Math.max(780,o.radius*9);
-        if (nearEdge) {
-          o.target = { x: Math.max(edgeMargin * 1.7, Math.min(CONFIG.world.width - edgeMargin * 1.7, o.x + (CONFIG.world.width / 2 - o.x) * .85)), y: Math.max(edgeMargin * 1.7, Math.min(CONFIG.world.height - edgeMargin * 1.7, o.y + (CONFIG.world.height / 2 - o.y) * .85)) };
+        if (nearEdge || edgeEscapeActive) {
+          const centerX=CONFIG.world.width/2, centerY=CONFIG.world.height/2, dx=centerX-o.x, dy=centerY-o.y, centerDistance=Math.max(1,Math.hypot(dx,dy)), lane=(o.id%7-3)*105, innerMargin=edgeMargin*1.9;
+          o.target = { x:Math.max(innerMargin,Math.min(CONFIG.world.width-innerMargin,centerX-dy/centerDistance*lane)), y:Math.max(innerMargin,Math.min(CONFIG.world.height-innerMargin,centerY+dx/centerDistance*lane)) };
         } else if (o.boss) {
           const titan = o.name === "Titan Vex";
           const lead = titan ? 1.1 : o.name === "Void Orion" ? 1.7 : 1.05;
