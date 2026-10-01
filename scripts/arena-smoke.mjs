@@ -22,19 +22,28 @@ expect(/poisonousGrazer\s*=\s*small instanceof Organism/.test(game), "Toxic Craz
 expect(/updatePoisonBolts/.test(game) && /drawPoisonBolts/.test(game), "Toxic Master poison arrows are incomplete.");
 expect(/Toxic Master/.test(game), "Toxic Master is missing from game logic.");
 expect(/captureTypePeaks/.test(game) && /peaks:\{\.\.\.this\.typePeakMass\}/.test(game), "Opponent peak-mass telemetry is incomplete.");
-expect(/eliteRecoveryActive/.test(game) && /this\.player\.mass >= 18000/.test(game) && /this\.difficulty === "extreme" \? 1\.72 : 1\.48/.test(game), "Elite endgame recovery is incomplete.");
-expect(/eliteEndgameActive/.test(game) && /elapsed >= 150/.test(game) && /eliteSafePrey/.test(game), "Elite 2:30 target intelligence is incomplete.");
-expect(/threat\.mass >= o\.mass \* 1\.65/.test(game) && /personality === "grazer"/.test(game), "Elite protection from hopeless or poisonous targets is incomplete.");
+expect(/eliteRecoveryActive/.test(game) && /escalation\.stage >= 2/.test(game) && /this\.difficulty === "extreme" \? 1\.72 : 1\.48/.test(game), "Elite recovery is not linked to the dynamic endgame.");
+expect(/speedMultiplier=now < o\.boostUntil \? o\.speedMultiplier : 1/.test(game), "Elite recovery still adds an unfair passive speed bonus.");
+expect(/eliteEndgameActive/.test(game) && /eliteViablePrey/.test(game) && /eliteMediumPrey/.test(game), "Elite tactical target intelligence is incomplete.");
+expect(/eliteRetreat/.test(game) && /threat\.mass >= o\.mass \* 1\.38/.test(game) && /personality === "grazer"/.test(game), "Elite protection from hopeless or poisonous targets is incomplete.");
 expect(/eliteLeaderGrowth/.test(game) && /leaderCount=Math\.max\(2,Math\.ceil\(leaders\.length\*\.18\)\)/.test(game) && /relative >= 1\) return 1/.test(game) && /relative < \.35 \? 1\.38 : relative < \.7 \? 1\.25 : 1\.12/.test(game), "Degressive leading-Elite growth is incomplete.");
 expect(/eliteGrowth=Math\.max\(recoveryGrowth,leaderGrowth\)/.test(game) && /Math\.max\(recoveryGrowth,leaderGrowth\)/.test(game), "Elite recovery and leader growth still stack multiplicatively.");
 expect(/eliteBurstProfile/.test(game) && /\(o\.mass-20000\)\/40000/.test(game) && /endPower=extreme \? 2\.05 : 1\.86/.test(game) && /extreme \? 3800 : 3300/.test(game), "Heavy Vector does not taper large-Elite speed or enforce recovery.");
-expect(/cowardSurvivalGrowth/.test(game) && /extreme" \? 1\.6/.test(game) && /threats\.slice\(0,2\)/.test(game) && /Math\.random\(\) < \.82/.test(game), "Coward survivor-scavenger role is incomplete.");
-expect(/elite:\.19, hunter:\.26/.test(game) && /fallback === "hunter" && this\.arenaRandom\(\) < \.14/.test(game), "Late Hunter-to-Elite respawn shift is incomplete.");
+expect(/cowardSurvivalGrowth/.test(game) && /stage < 1/.test(game) && /safeSnack/.test(game) && /Math\.random\(\) < \.9/.test(game), "Coward survivor-scavenger role is incomplete.");
+expect(/grazerFoodGrowth/.test(game) && /1\.58/.test(game), "Toxic Crazer particle growth identity is incomplete.");
+expect(/const late=this\.arenaEscalation\(\)\.stage >= 2/.test(game) && /elite:\.19, hunter:\.26/.test(game) && /fallback === "hunter" && this\.arenaRandom\(\) < \.14/.test(game), "Dynamic Hunter-to-Elite respawn shift is incomplete.");
 expect(/playerArenaRank\(\) === 1/.test(game) && /CONQUEST PHASE/.test(game), "Very Hard conquest victory is incomplete.");
 expect(/processRespawns/.test(game) && /respawnBudget/.test(game) && /respawnPersonality/.test(game), "Respawn throttling or type balancing is incomplete.");
 expect(/chaoticGrowth/.test(game) && /o\.mass <= 45000/.test(game), "Chaotic high-mass growth control is incomplete.");
 expect(/maxMass/.test(game) && /averageMass/.test(game) && /strongest individuals/.test(game), "Comparable phase intelligence is incomplete.");
-expect(/elapsed >= 120 \|\| mass >= 15000/.test(game) && /elapsed >= 210 \|\| mass >= 28000/.test(game), "Very Hard dynamic pressure thresholds are incomplete.");
+expect(/progress >= \.9 \? 3 : progress >= \.75 \? 2 : progress >= \.5 \? 1 : 0/.test(game) && /FULL ARENA ALARM/.test(game), "The 50/75/90 percent escalation stages are incomplete.");
+expect(/id="minimap"/.test(html) && /drawMinimap/.test(game) && /slice\(0,10\)/.test(game) && /o\.boss && !topIds\.has\(o\.id\)/.test(game), "Arena Radar does not show the top ten opponents and every boss.");
+expect(/\.mobile-play \.arena-radar canvas \{ height:76px/.test(css), "Arena Radar has no compact mobile layout.");
+for (let run = 0; run < 100; run++) {
+  const progress = run / 100;
+  const stage = progress >= .9 ? 3 : progress >= .75 ? 2 : progress >= .5 ? 1 : 0;
+  expect(stage === (run >= 90 ? 3 : run >= 75 ? 2 : run >= 50 ? 1 : 0), `Escalation smoke ${run + 1}: wrong progress stage.`);
+}
 expect(/relevanceRadius/.test(game) && /selectionBand/.test(game) && /chaosAiDamage/.test(game), "Spatially relevant Chaotic explosions or their impact telemetry are incomplete.");
 expect(/hall:season-2/.test(read("api/leaderboard.ts")), "The fresh Hall of Fame season is not active.");
 expect(/configurable-rules" hidden/.test(html), "Advanced match-rule controls are visible.");
@@ -60,7 +69,7 @@ expect(/\.mobile-play \.quick-actions button \{ min-width:44px; min-height:44px/
 expect(/\.mobile-play \.end-hall \{ order:2/.test(css), "Mobile results do not prioritize the player's round summary.");
 expect(/Compact desktop end screen/.test(css) && /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/.test(css) && /grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/.test(css) && /max-height:calc\(100vh - 20px\)/.test(css), "Desktop end screen is not compact enough to avoid page scrolling.");
 expect(/updateToxicKamikaze/.test(game) && /elapsed < 120/.test(game) && /toxic\.mass \* 8/.test(game), "Very Hard Toxic Kamikaze is incomplete.");
-expect(/toxicAdvantage/.test(game) && /1\.45 : 1\.25/.test(game) && /1\.3 : 1\.15/.test(game), "Toxic Crazer growth role is incomplete.");
+expect(/toxicAdvantage/.test(game) && /1\.18 : 1\.08/.test(game) && /1\.3 : 1\.15/.test(game) && /grazerFoodGrowth/.test(game), "Toxic Crazer growth role is incomplete.");
 expect(/personality:removed\.personality/.test(game) && /makeOrganism\(this\.respawnPersonality\(entry\.personality\)\)/.test(game), "Respawning does not preserve or rebalance regular opponent types.");
 expect(/updateBossCores/.test(game) && /bossName:removed\.name/.test(game) && /performance\.now\(\)\+20000/.test(game) && /killer !== this\.player/.test(game), "One-time AI-only Boss Core return is incomplete.");
 expect(/bossAiDefeats/.test(game) && /bossCoreReturns/.test(game) && /schemaVersion:4/.test(game), "Boss lifecycle telemetry is incomplete.");
