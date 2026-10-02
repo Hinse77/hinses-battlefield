@@ -126,6 +126,8 @@ expect(/admin-recent/.test(html) && /recentRounds/.test(game) && /pulse-round-me
 expect(/pulse-kpis/.test(html) && /pulse-balance/.test(html) && /pulse-ring/.test(css) && /pulse-round\.win/.test(css), "Arena Pulse graphical dashboard is incomplete.");
 expect(/start-deep-stats/.test(html) && /balance-analysis-feed/.test(html) && /syncAnalysisFeed/.test(game), "Persistent local Deep Statistics access is incomplete.");
 expect(/schemaVersion:5/.test(game) && /toxicBoltsHitPlayer/.test(game) && /abilities:/.test(game) && /respawns:/.test(game) && /finalTop10/.test(game), "Round telemetry schema is not sufficiently detailed.");
+expect(/enhanceDeepStatsVisuals/.test(game) && /deep-readable-summary/.test(game) && /deep-timeline/.test(game) && /deep-ranking/.test(game) && /deep-data-guide/.test(game), "Deep Statistics lacks its human-readable visual debrief.");
+expect(/\.deep-bars/.test(css) && /\.deep-phase-row/.test(css) && /\.deep-ranking/.test(css), "Visual Deep Statistics styling is incomplete.");
 expect(/decorateRoundStatus/.test(game) && /round\.status !== "abandoned"/.test(game) && /provisional points · not ranked/.test(game) && /excluded from completed-round win rate/.test(game) && /round-status-note/.test(css), "Deep Statistics does not correctly distinguish interrupted runs.");
 expect(/difficulty === "all"/.test(read("api/balance.ts")) && /slice\(0, 100\)/.test(read("api/balance.ts")), "Central balance history is not broadly retrievable or persistent enough.");
 expect(/capturePhaseSnapshot\("1:00"\)/.test(game) && /capturePhaseSnapshot\("3:00"\)/.test(game) && /player:\{ count:1/.test(game), "Player and mid-round phase snapshots are incomplete.");
