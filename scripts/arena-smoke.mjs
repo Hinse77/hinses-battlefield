@@ -21,6 +21,12 @@ expect(/maxSurvivalSeconds:\s*600/.test(config), "Time limit is not fixed to 10 
 expect(/poisonousGrazer\s*=\s*small instanceof Organism/.test(game), "Toxic Crazers do not poison every eater.");
 expect(/updatePoisonBolts/.test(game) && /drawPoisonBolts/.test(game), "Toxic Master poison arrows are incomplete.");
 expect(/Toxic Master/.test(game), "Toxic Master is missing from game logic.");
+expect(/adaptiveRate/.test(game) && /target\.mass-10000/.test(game) && /maxDamage/.test(game) && /actualLoss\*\.28/.test(game), "Toxic Master's Adaptive Venom scaling or siphon is incomplete.");
+for (let run = 0; run < 100; run++) {
+  const mass = 200 + run * 2500, baseDamage = 120, rate = .016, cap = 2200, gentleBase = Math.min(baseDamage, Math.max(18, mass * .01)), damage = Math.min(cap, Math.floor(gentleBase + Math.max(0, mass - 10000) * rate));
+  expect(damage >= 18 && damage <= cap, `Adaptive Venom smoke ${run + 1}: damage escaped its safe range.`);
+  if (mass < 3000) expect(damage <= 30, `Adaptive Venom smoke ${run + 1}: early damage is too punishing.`);
+}
 expect(/captureTypePeaks/.test(game) && /peaks:\{\.\.\.this\.typePeakMass\}/.test(game), "Opponent peak-mass telemetry is incomplete.");
 expect(/eliteRecoveryActive/.test(game) && /escalation\.stage >= 2/.test(game) && /this\.difficulty === "extreme" \? 1\.72 : 1\.48/.test(game), "Elite recovery is not linked to the dynamic endgame.");
 expect(/speedMultiplier=now < o\.boostUntil \? o\.speedMultiplier : 1/.test(game), "Elite recovery still adds an unfair passive speed bonus.");
@@ -45,6 +51,12 @@ for (let run = 0; run < 100; run++) {
   const x = run % 2 ? 120 : 5880, y = run % 4 < 2 ? 120 : 5880, centerX = 3000, centerY = 3000, dx = centerX - x, dy = centerY - y, distance = Math.hypot(dx, dy), lane = (run % 7 - 3) * 105;
   const targetX = centerX - dy / distance * lane, targetY = centerY + dx / distance * lane;
   expect(targetX > 500 && targetX < 5500 && targetY > 500 && targetY < 5500 && dx * (targetX - x) + dy * (targetY - y) > 0, `Edge recovery smoke ${run + 1}: unsafe escape lane.`);
+}
+expect(/updateEndDuel\(dt\)/.test(game) && /playerRank <= 2/.test(game) && /larger\/smaller <= 1\.8/.test(game), "A genuine top-two end duel is not tracked.");
+expect(/endDuelBonus/.test(game) && /duelSeconds < 8/.test(game) && /extreme" \? 2500/.test(game) && /kind:"duel"/.test(game), "The capped End Duel score bonus is incomplete.");
+for (let run = 0; run < 100; run++) {
+  const difficulty = ["easy","normal","hard","extreme"][run % 4], caps = { easy:800, normal:1200, hard:1800, extreme:2500 }, cap = caps[difficulty], seconds = 8 + run * .55, rivalMass = 30000 + run * 900, threatScale = Math.max(0,Math.min(1,(rivalMass/40000-.75)/1.75)), durationScale = Math.min(1,seconds/40), bonus = Math.min(cap,Math.round((350+cap*.65*threatScale+cap*.22*durationScale)/50)*50);
+  expect(bonus >= 0 && bonus <= cap, `End Duel score smoke ${run + 1}: bonus exceeds its difficulty cap.`);
 }
 for (let run = 0; run < 100; run++) {
   const progress = run / 100;

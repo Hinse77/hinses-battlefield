@@ -179,3 +179,6 @@ html:not(.mobile-play) .touch-controls { display:none !important; } .mobile-play
   .leaderboard li:nth-child(n+6) { display:none; }
   .arena-radar canvas { height:88px; }
 }
+
+.score-chip.duel { border-color:rgba(255,209,92,.34); background:linear-gradient(135deg,rgba(86,57,19,.62),rgba(43,35,91,.58)); }
+.score-chip.duel i,.score-chip.duel b { color:#ffe083; text-shadow:0 0 9px rgba(255,209,92,.45); }
