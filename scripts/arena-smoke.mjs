@@ -73,7 +73,7 @@ expect(/celebration-canvas/.test(css) && /firework-side \{ display:none !importa
 expect(/class CelebrationFireworks/.test(celebration) && /globalCompositeOperation = "lighter"/.test(celebration) && /private project\(/.test(celebration), "Desktop 3D celebration renderer is incomplete.");
 expect(/this\.mobile\s*\?\s*18\s*:\s*48/.test(celebration) && /this\.mobile\s*\?\s*2\s*:\s*5/.test(celebration), "Mobile celebration does not use its reduced particle budget.");
 expect(/SERVICE_RANKS/.test(game) && /recordServiceRank/.test(game) && /service-ranks/.test(html) && /threshold:3200000/.test(game), "Service-rank progress or long-term pacing is incomplete.");
-expect(/refreshServiceRanks/.test(game) && /fetch\("\/api\/ranks"\)/.test(game), "Global service ranks are not loaded at startup.");
+expect(/refreshServiceRanks/.test(game) && /apiEndpoint\("\/api\/ranks"\)/.test(game), "Global service ranks are not loaded at startup.");
 expect(/drawPlayerRankBadge/.test(game) && /this\.drawPlayerRankBadge\(ctx\)/.test(game) && /RANK UP/.test(game) && /rankPromotion/.test(css), "Visible player badge or rank-up feedback is incomplete.");
 expect(/req\.body\?\.total/.test(read("api/ranks.ts")) && /slice\(0,80\)/.test(read("api/ranks.ts")), "Cross-device service-rank synchronization is incomplete.");
 expect(/req\.method !== "GET"/.test(publicAnalytics) && !/ANALYTICS_ADMIN_KEY/.test(publicAnalytics), "Community overview is still password-protected.");
@@ -119,6 +119,9 @@ expect(/bossAiDefeats/.test(read("api/balance.ts")) && /bossCoreReturns/.test(re
 expect(/duelRounds/.test(read("api/balance.ts")) && /duelSeconds/.test(read("api/balance.ts")) && /duelRivalPeak/.test(read("api/balance.ts")) && /duelRivalName/.test(read("api/balance.ts")) && /duelBonus/.test(read("api/balance.ts")), "Central end-duel telemetry is incomplete.");
 expect(/pulse-duel-summary/.test(game) && /pulse-round-duel/.test(game), "Arena Pulse does not visualize shared end-duel telemetry.");
 expect(/Access-Control-Allow-Origin/.test(read("api/balance.ts")) && /req\.method === "OPTIONS"/.test(read("api/balance.ts")), "Local-to-deployed telemetry CORS support is incomplete.");
+expect(["admin-analytics.ts","analytics.ts","balance.ts","guestbook.ts","leaderboard.ts","ranks.ts"].every(file => { const source=read(`api/${file}`); return /Access-Control-Allow-Origin/.test(source) && /req\.method === "OPTIONS"/.test(source); }), "Cross-platform API access is incomplete.");
+expect(/isPortalHost/.test(game) && /apiEndpoint/.test(game) && /preparePortalIdentity/.test(game) && /Pilot /.test(game), "Portal mode does not provide shared services and one-click identity.");
+expect(/vite build --base=\.\//.test(read("package.json")) && !/(src|href)="\/hinses-battlefield-logo/.test(html), "The HTML5 build is not portable across game portals.");
 expect(/balance:run-ids:v1/.test(read("api/balance.ts")) && /duplicate:true/.test(read("api/balance.ts")) && /if \(!abandoned\)/.test(read("api/balance.ts")), "Central run deduplication or abandoned-round exclusion is incomplete.");
 expect(["admin-analytics.ts","analytics.ts","balance.ts","guestbook.ts","leaderboard.ts","ranks.ts"].every(file => { const source=read(`api/${file}`); return /KV_REST_API_URL/.test(source) && /KV_REST_API_TOKEN/.test(source) && /UPSTASH_REDIS_REST_URL/.test(source) && /new Redis\(\{ url: redisUrl, token: redisToken \}\)/.test(source); }), "Server functions do not support both Vercel KV and direct Upstash environment names.");
 expect(/req\.method === "GET"/.test(read("api/balance.ts")) && /recentRounds/.test(read("api/balance.ts")) && /top10/.test(read("api/balance.ts")), "Detailed balance telemetry is not centrally retrievable.");

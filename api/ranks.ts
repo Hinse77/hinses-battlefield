@@ -8,6 +8,8 @@ const factors: Record<string, number> = { easy:.7, normal:1, hard:1.25, extreme:
 const clean = (value: unknown, max: number) => Math.max(0, Math.min(max, Number(value) || 0));
 
 export default async function handler(req: any, res: any) {
+  res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "Content-Type"); res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  if (req.method === "OPTIONS") return res.status(204).end();
   if (!redis) return res.status(200).json({ configured:false, records:[] });
   const records = (await redis.get<any[]>(key)) || [];
   if (req.method === "GET") return res.status(200).json({ configured:true, records:records.sort((a,b) => b.total - a.total).slice(0,80) });

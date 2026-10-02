@@ -11,8 +11,7 @@ const number = (value: unknown, max: number) => Math.max(0, Math.min(max, Number
 const cleanCounts = (value: any, max: number) => Object.fromEntries(Object.entries(value && typeof value === "object" ? value : {}).slice(0, 30).map(([name,count]) => [String(name).replace(/[^a-z0-9 _-]/gi, "").slice(0, 30), number(count,max)]));
 
 export default async function handler(req: any, res: any) {
-  const origin=String(req.headers?.origin || ""), allowedOrigin=/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) || origin === "https://hinses-battlefield.vercel.app" ? origin : "https://hinses-battlefield.vercel.app";
-  res.setHeader("Access-Control-Allow-Origin",allowedOrigin); res.setHeader("Vary","Origin"); res.setHeader("Access-Control-Allow-Headers","Content-Type"); res.setHeader("Access-Control-Allow-Methods","GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Origin","*"); res.setHeader("Access-Control-Allow-Headers","Content-Type"); res.setHeader("Access-Control-Allow-Methods","GET,POST,OPTIONS");
   if (req.method === "OPTIONS") return res.status(204).end();
   if (!redis) return res.status(200).json({ configured: false });
   if (req.method === "GET") res.setHeader("Cache-Control", "no-store, max-age=0");

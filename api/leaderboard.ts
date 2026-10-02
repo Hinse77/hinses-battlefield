@@ -10,6 +10,8 @@ const keyFor = (difficulty: string) => `hinses-battlefield:hall:season-2:${diffi
 const clean = (value: unknown, max: number) => Math.max(0, Math.min(max, Number(value) || 0));
 
 export default async function handler(req: any, res: any) {
+  res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "Content-Type"); res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  if (req.method === "OPTIONS") return res.status(204).end();
   const difficulty = String(req.method === "GET" ? req.query?.difficulty : req.body?.difficulty || "normal");
   if (!allowed.has(difficulty)) return res.status(400).json({ error: "Unknown difficulty" });
   if (!redis) return res.status(200).json({ configured: false, records: [] });

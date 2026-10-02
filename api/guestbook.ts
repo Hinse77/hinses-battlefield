@@ -8,6 +8,8 @@ const key = "hinses-battlefield:guestbook:v1";
 const clean = (value: unknown, max: number) => String(value || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, max);
 
 export default async function handler(req: any, res: any) {
+  res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "Content-Type"); res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  if (req.method === "OPTIONS") return res.status(204).end();
   if (!redis) return res.status(200).json({ configured: false, entries: [] });
   if (req.method === "GET") return res.status(200).json({ configured: true, entries: await redis.lrange<Entry>(key, 0, 39) });
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });

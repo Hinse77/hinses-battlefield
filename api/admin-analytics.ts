@@ -7,6 +7,8 @@ const keys = { totals: "hinses-battlefield:analytics:totals", sessions: "hinses-
 const number = (value: unknown) => Math.max(0, Number(value) || 0);
 
 export default async function handler(req: any, res: any) {
+  res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "Content-Type"); res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+  if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
   if (!redis) return res.status(200).json({ configured: false, totals: { uniqueSessions: 0, starts: 0, completions: 0, wins: 0 }, difficulties: [], countries: [], balance: [] });
   const [totals, sessions, difficulties, completions, countries, balance] = await Promise.all([redis.hgetall<Record<string, unknown>>(keys.totals), redis.scard(keys.sessions), redis.hgetall<Record<string, unknown>>(keys.startedByDifficulty), redis.hgetall<Record<string, unknown>>(keys.completedByDifficulty), redis.hgetall<Record<string, unknown>>(keys.startedByCountry), Promise.all(["easy", "normal", "hard", "extreme"].map(difficulty => redis.get(`hinses-battlefield:balance:v1:${difficulty}`)))]);

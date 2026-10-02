@@ -14,6 +14,8 @@ async function stats() {
 }
 
 export default async function handler(req: any, res: any) {
+  res.setHeader("Access-Control-Allow-Origin", "*"); res.setHeader("Access-Control-Allow-Headers", "Content-Type"); res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  if (req.method === "OPTIONS") return res.status(204).end();
   if (!redis) return res.status(200).json({ configured: false });
   if (req.method === "GET") return res.status(200).json(await stats());
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
