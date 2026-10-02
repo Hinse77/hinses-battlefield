@@ -182,3 +182,6 @@ html:not(.mobile-play) .touch-controls { display:none !important; } .mobile-play
 
 .score-chip.duel { border-color:rgba(255,209,92,.34); background:linear-gradient(135deg,rgba(86,57,19,.62),rgba(43,35,91,.58)); }
 .score-chip.duel i,.score-chip.duel b { color:#ffe083; text-shadow:0 0 9px rgba(255,209,92,.45); }
+.game-over .round-summary > .mass-record-card { border-color:rgba(255,209,92,.72); background:linear-gradient(135deg,rgba(92,62,13,.72),rgba(13,63,68,.72)); box-shadow:0 0 20px rgba(255,209,92,.17); }
+.round-summary .mass-record-card > b { color:#ffe36d; text-shadow:0 0 12px rgba(255,209,92,.45); }
+.round-summary .mass-record-badge { display:block; margin-top:4px; color:#fff0a6; font-size:8px; font-style:normal; font-weight:900; letter-spacing:.06em; line-height:1.15; }

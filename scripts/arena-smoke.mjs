@@ -55,6 +55,7 @@ for (let run = 0; run < 100; run++) {
 }
 expect(/updateEndDuel\(dt\)/.test(game) && /playerRank <= 2/.test(game) && /larger\/smaller <= 1\.8/.test(game), "A genuine top-two end duel is not tracked.");
 expect(/endDuelBonus/.test(game) && /duelSeconds < 8/.test(game) && /extreme" \? 2500/.test(game) && /kind:"duel"/.test(game), "The capped End Duel score bonus is incomplete.");
+expect(/captureMassRecord/.test(game) && /hinses-personal-mass-record:/.test(game) && /NEW MASS RECORD/.test(game) && /mass-record-card/.test(css), "Personal mass records are not clearly recognized in the round summary.");
 for (let run = 0; run < 100; run++) {
   const difficulty = ["easy","normal","hard","extreme"][run % 4], caps = { easy:800, normal:1200, hard:1800, extreme:2500 }, cap = caps[difficulty], seconds = 8 + run * .55, rivalMass = 30000 + run * 900, threatScale = Math.max(0,Math.min(1,(rivalMass/40000-.75)/1.75)), durationScale = Math.min(1,seconds/40), bonus = Math.min(cap,Math.round((350+cap*.65*threatScale+cap*.22*durationScale)/50)*50);
   expect(bonus >= 0 && bonus <= cap, `End Duel score smoke ${run + 1}: bonus exceeds its difficulty cap.`);
