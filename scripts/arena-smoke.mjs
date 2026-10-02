@@ -18,6 +18,7 @@ const expect = (condition, message) => { if (!condition) failures.push(message);
 // Fixed competitive rules and all central mechanics must remain present.
 expect(/targetMass:\s*40000/.test(config), "Target mass is not fixed to 40,000.");
 expect(/maxSurvivalSeconds:\s*600/.test(config), "Time limit is not fixed to 10 minutes.");
+expect(/localStorage\.getItem\("hinses-last-difficulty"\) \|\| "extreme"/.test(game) && /<option value="extreme" selected>/.test(html) && !/<option value="normal" selected>/.test(html), "Very Hard is not the default difficulty for new players.");
 expect(/poisonousGrazer\s*=\s*small instanceof Organism/.test(game), "Toxic Crazers do not poison every eater.");
 expect(/updatePoisonBolts/.test(game) && /drawPoisonBolts/.test(game), "Toxic Master poison arrows are incomplete.");
 expect(/Toxic Master/.test(game), "Toxic Master is missing from game logic.");
