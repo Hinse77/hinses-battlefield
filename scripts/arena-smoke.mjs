@@ -93,7 +93,7 @@ expect(/updateToxicKamikaze/.test(game) && /elapsed < 120/.test(game) && /toxic\
 expect(/toxicAdvantage/.test(game) && /1\.18 : 1\.08/.test(game) && /1\.3 : 1\.15/.test(game) && /grazerFoodGrowth/.test(game), "Toxic Crazer growth role is incomplete.");
 expect(/personality:removed\.personality/.test(game) && /makeOrganism\(this\.respawnPersonality\(entry\.personality\)\)/.test(game), "Respawning does not preserve or rebalance regular opponent types.");
 expect(/updateBossCores/.test(game) && /bossName:removed\.name/.test(game) && /performance\.now\(\)\+20000/.test(game) && /killer !== this\.player/.test(game), "One-time AI-only Boss Core return is incomplete.");
-expect(/bossAiDefeats/.test(game) && /bossCoreReturns/.test(game) && /schemaVersion:4/.test(game), "Boss lifecycle telemetry is incomplete.");
+expect(/bossAiDefeats/.test(game) && /bossCoreReturns/.test(game) && /schemaVersion:5/.test(game), "Boss lifecycle telemetry is incomplete.");
 expect(/toxic-alert/.test(html) && /TOXIC KAMIKAZE/.test(html), "Toxic Kamikaze warning is missing.");
 expect(/arenaCode\(\)/.test(game) && /setArenaCode/.test(game) && /arenaRandom\(\)/.test(game), "Replay arena code generation is incomplete.");
 expect(/arena-code/.test(html) && /Copy arena code/.test(game), "Replay arena code UI is missing.");
@@ -115,7 +115,9 @@ expect(/Friendly arena challenges/.test(llms) && /Arena Code/.test(llms) && /\"c
 expect(/capturePhaseSnapshots/.test(game) && /capturePhaseSnapshot\("end"\)/.test(game) && /phases:this\.phaseSnapshots/.test(game), "Opponent phase snapshots are incomplete.");
 expect(/deathCause/.test(game) && /big instanceof Organism \? big\.name/.test(game), "Player death-cause tracking is incomplete.");
 expect(/deathCauses/.test(read("api/balance.ts")) && /phaseSnapshots/.test(read("api/balance.ts")) && /source\.maxMass/.test(read("api/balance.ts")) && /source\.averageMass/.test(read("api/balance.ts")), "Shared balance telemetry misses new round signals.");
-expect(/bossAiDefeats/.test(read("api/balance.ts")) && /bossCoreReturns/.test(read("api/balance.ts")) && /schemaVersion:4/.test(read("api/balance.ts")), "Shared Boss Core telemetry is incomplete.");
+expect(/bossAiDefeats/.test(read("api/balance.ts")) && /bossCoreReturns/.test(read("api/balance.ts")) && /schemaVersion:5/.test(read("api/balance.ts")), "Shared Boss Core telemetry is incomplete.");
+expect(/duelRounds/.test(read("api/balance.ts")) && /duelSeconds/.test(read("api/balance.ts")) && /duelRivalPeak/.test(read("api/balance.ts")) && /duelRivalName/.test(read("api/balance.ts")) && /duelBonus/.test(read("api/balance.ts")), "Central end-duel telemetry is incomplete.");
+expect(/pulse-duel-summary/.test(game) && /pulse-round-duel/.test(game), "Arena Pulse does not visualize shared end-duel telemetry.");
 expect(/Access-Control-Allow-Origin/.test(read("api/balance.ts")) && /req\.method === "OPTIONS"/.test(read("api/balance.ts")), "Local-to-deployed telemetry CORS support is incomplete.");
 expect(/balance:run-ids:v1/.test(read("api/balance.ts")) && /duplicate:true/.test(read("api/balance.ts")) && /if \(!abandoned\)/.test(read("api/balance.ts")), "Central run deduplication or abandoned-round exclusion is incomplete.");
 expect(["admin-analytics.ts","analytics.ts","balance.ts","guestbook.ts","leaderboard.ts","ranks.ts"].every(file => { const source=read(`api/${file}`); return /KV_REST_API_URL/.test(source) && /KV_REST_API_TOKEN/.test(source) && /UPSTASH_REDIS_REST_URL/.test(source) && /new Redis\(\{ url: redisUrl, token: redisToken \}\)/.test(source); }), "Server functions do not support both Vercel KV and direct Upstash environment names.");
@@ -123,7 +125,7 @@ expect(/req\.method === "GET"/.test(read("api/balance.ts")) && /recentRounds/.te
 expect(/admin-recent/.test(html) && /recentRounds/.test(game) && /pulse-round-metrics/.test(game) && /pulse-types/.test(game), "Recent shared balance rounds are missing from Arena Pulse.");
 expect(/pulse-kpis/.test(html) && /pulse-balance/.test(html) && /pulse-ring/.test(css) && /pulse-round\.win/.test(css), "Arena Pulse graphical dashboard is incomplete.");
 expect(/start-deep-stats/.test(html) && /balance-analysis-feed/.test(html) && /syncAnalysisFeed/.test(game), "Persistent local Deep Statistics access is incomplete.");
-expect(/schemaVersion:4/.test(game) && /toxicBoltsHitPlayer/.test(game) && /abilities:/.test(game) && /respawns:/.test(game) && /finalTop10/.test(game), "Round telemetry schema is not sufficiently detailed.");
+expect(/schemaVersion:5/.test(game) && /toxicBoltsHitPlayer/.test(game) && /abilities:/.test(game) && /respawns:/.test(game) && /finalTop10/.test(game), "Round telemetry schema is not sufficiently detailed.");
 expect(/decorateRoundStatus/.test(game) && /round\.status !== "abandoned"/.test(game) && /provisional points · not ranked/.test(game) && /excluded from completed-round win rate/.test(game) && /round-status-note/.test(css), "Deep Statistics does not correctly distinguish interrupted runs.");
 expect(/difficulty === "all"/.test(read("api/balance.ts")) && /slice\(0, 100\)/.test(read("api/balance.ts")), "Central balance history is not broadly retrievable or persistent enough.");
 expect(/capturePhaseSnapshot\("1:00"\)/.test(game) && /capturePhaseSnapshot\("3:00"\)/.test(game) && /player:\{ count:1/.test(game), "Player and mid-round phase snapshots are incomplete.");
