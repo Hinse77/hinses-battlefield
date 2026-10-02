@@ -46,6 +46,8 @@ expect(/maxMass/.test(game) && /averageMass/.test(game) && /strongest individual
 expect(/progress >= \.9 \? 3 : progress >= \.75 \? 2 : progress >= \.5 \? 1 : 0/.test(game) && /FULL ARENA ALARM/.test(game), "The 50/75/90 percent escalation stages are incomplete.");
 expect(/id="minimap"/.test(html) && /drawMinimap/.test(game) && /slice\(0,10\)/.test(game) && /o\.boss && !topIds\.has\(o\.id\)/.test(game), "Arena Radar does not show the top ten opponents and every boss.");
 expect(/\.mobile-play \.arena-radar canvas \{ height:76px/.test(css), "Arena Radar has no compact mobile layout.");
+expect(/hinses-battlefield-start-landscape\.jpg/.test(css) && /hinses-battlefield-start-portrait\.jpg/.test(css), "The cinematic start artwork is not wired for both desktop and mobile.");
+expect(/justify-items:end/.test(css) && /@media \(max-width:700px\), \(orientation:portrait\) and \(pointer:coarse\)/.test(css), "The cinematic start artwork lacks its responsive desktop/mobile composition.");
 expect(/edgeEscapeUntil/.test(game) && /edgeEscapeActive/.test(game) && /touchingEdge/.test(game) && /now\+2400/.test(game), "Persistent edge-escape lanes are incomplete.");
 expect(/stuckSeconds/.test(read("src/entities/Organism.ts")) && /leftPressure \* leftPressure/.test(read("src/entities/Organism.ts")) && /this\.velocity\.x \+= dx\/centerDistance\*280/.test(read("src/entities/Organism.ts")), "Physical wall recovery or the stuck detector is incomplete.");
 for (let run = 0; run < 100; run++) {
